@@ -25,8 +25,12 @@ def get_package_paths(file_path):
 
 
 def get_dependencies(package_json_path):
-    dtypes = ["dependencies", "optionalDependencies",
-              "devDependencies", "peerDependencies"]
+    dtypes = [
+        "dependencies",
+        "optionalDependencies",
+        "devDependencies",
+        "peerDependencies",
+    ]
     with open(package_json_path, "r") as f:
         data = json.load(f)
     dependencies = []
@@ -57,12 +61,19 @@ def check_dependency(user, dependency):
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Check package.json files for unregistered dependencies.")
+        description="Check package.json files for unregistered dependencies."
+    )
     main_args_group = parser.add_mutually_exclusive_group(required=True)
     main_args_group.add_argument(
-        "-p", "--p", dest="package", action="store", help="A package.json file path.")
+        "-p", "--p", dest="package", action="store", help="A package.json file path."
+    )
     main_args_group.add_argument(
-        "-pl", "--pl", dest="package_list", action="store", help="A list file of package.json file paths.")
+        "-pl",
+        "--pl",
+        dest="package_list",
+        action="store",
+        help="A list file of package.json file paths.",
+    )
     args = parser.parse_args()
 
     packages = []
@@ -75,8 +86,7 @@ def main():
         print(f"Testing: {package}")
         dependencies = get_dependencies(package)
         for dependency in dependencies:
-            threading.Thread(target=check_dependency, args=(
-                package, dependency)).run()
+            threading.Thread(target=check_dependency, args=(package, dependency)).run()
 
 
 if __name__ == "__main__":
