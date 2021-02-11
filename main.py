@@ -5,7 +5,6 @@ import json
 import argparse
 import threading
 import time
-import re
 from functools import cache
 
 # Max values
