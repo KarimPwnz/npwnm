@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-
-import requests
-import json
 import argparse
+import json
 import threading
 import time
 from functools import cache
+
+import requests
 
 # Max values
 MAX_THREADS = 100
@@ -86,7 +86,9 @@ def main():
         print(f"Testing: {package}")
         dependencies = get_dependencies(package)
         for name, version in dependencies.items():
-            threading.Thread(target=check_dependency, args=(package, name, version)).run()
+            threading.Thread(
+                target=check_dependency, args=(package, name, version)
+            ).run()
 
 
 if __name__ == "__main__":
