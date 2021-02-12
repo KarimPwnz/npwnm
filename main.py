@@ -43,12 +43,12 @@ def get_dependencies(package_json_path):
 def is_dependency_registered(dependency_name):
     timeout = 0
     while True:
-        time.sleep(timeout)
         res = SESSION.head(f"https://registry.npmjs.org/{dependency_name}")
         if res.status_code != 429:
             break
         timeout += 5
         print(f"retrying in {timeout} seconds...")
+        time.sleep(timeout)
 
     return res.status_code == 200
 
