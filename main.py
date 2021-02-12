@@ -33,9 +33,9 @@ def get_dependencies(package_json_path):
     ]
     with open(package_json_path, "r") as f:
         data = json.load(f)
-    dependencies = []
+    dependencies = {}
     for dtype in dtypes:
-        dependencies.extend(list(data.get(dtype, {})))
+        dependencies.update(data.get(dtype, ""))
     return dependencies
 
 
@@ -53,10 +53,10 @@ def is_dependency_registered(dependency_name):
     return res.status_code == 200
 
 
-def check_dependency(user, dependency):
+def check_dependency(user, name, version):
     with THREADS_SEM:
-        if not is_dependency_registered(dependency):
-            print(f"\n\n==== Pwnable: {dependency} — used by {user} ===\n\n")
+        if not is_dependency_registered(name):
+            print(f"\n\n==== Pwnable in {user}: {name} version {version} ====\n\n")
 
 
 def main():
@@ -85,8 +85,8 @@ def main():
     for package in packages:
         print(f"Testing: {package}")
         dependencies = get_dependencies(package)
-        for dependency in dependencies:
-            threading.Thread(target=check_dependency, args=(package, dependency)).run()
+        for name, version in dependencies.items():
+            threading.Thread(target=check_dependency, args=(package, name, version)).run()
 
 
 if __name__ == "__main__":
