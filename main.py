@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import argparse
 import json
+import sys
 import threading
 import time
 from functools import cache
@@ -84,11 +85,16 @@ def main():
 
     for package in packages:
         print(f"Testing: {package}")
-        dependencies = get_dependencies(package)
-        for name, version in dependencies.items():
-            threading.Thread(
-                target=check_dependency, args=(package, name, version)
-            ).run()
+        try:
+            dependencies = get_dependencies(package)
+            for name, version in dependencies.items():
+                threading.Thread(
+                    target=check_dependency, args=(package, name, version)
+                ).run()
+        except KeyboardInterrupt:
+            sys.exit()
+        except:
+            print(f"Failed: {package}")
 
 
 if __name__ == "__main__":
